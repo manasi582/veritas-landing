@@ -160,7 +160,7 @@ export default function QuickstartPage() {
                 <div className="text-[10px] text-black/30 tracking-widest uppercase mb-2">TypeScript</div>
                 <CodeBlock code={`import { Agent, Tool, AuditLogger } from '@veritas/sdk'
 
-// Define a tool — every call will be logged automatically
+// Define a tool  -  every call will be logged automatically
 const fetchData = new Tool('fetch-data', async (url: string) => {
   const res = await fetch(url)
   return res.json()
@@ -233,7 +233,7 @@ const result = await extractor.run({
                 <div className="text-white/60">  decision_logged: selected extraction strategy</div>
                 <div className="text-white/60">  output_verified: ✓ schema valid</div>
                 <div className="text-white/40">  ─────────────────────────</div>
-                <div className="text-emerald-400">✓ Run complete — 1842ms</div>
+                <div className="text-emerald-400">✓ Run complete  -  1842ms</div>
                 <div className="text-white/35">  Audit log: ./veritas-logs/run-001.json</div>
               </div>
             </div>

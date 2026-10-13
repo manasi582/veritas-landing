@@ -7,7 +7,7 @@ import { RevealText } from "@/components/reveal-text"
 import { PixelIcon } from "@/components/pixel-icon"
 import Link from "next/link"
 
-function useInView(threshold = 0.15) {
+function useInView(threshold = 0.1) {
   const ref = useRef<HTMLDivElement>(null)
   const [inView, setInView] = useState(false)
   useEffect(() => {
@@ -21,45 +21,29 @@ function useInView(threshold = 0.15) {
 }
 
 function BentoCard({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
-  const { ref, inView } = useInView(0.1)
+  const { ref, inView } = useInView()
   return (
-    <div
-      ref={ref}
-      className={`group relative rounded-2xl border border-black/[0.07] bg-white overflow-hidden hover:border-black/[0.15] hover:bg-[#fafaf8] ${className}`}
-      style={{
-        opacity: inView ? 1 : 0,
-        transform: inView ? "translateY(0)" : "translateY(28px)",
-        transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms, border-color 0.3s ease, background-color 0.3s ease`,
-      }}
-    >
+    <div ref={ref} className={`rounded-2xl border border-black/[0.07] bg-white overflow-hidden ${className}`}
+      style={{ opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(24px)", transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms` }}>
       {children}
     </div>
   )
 }
 
 function Tag({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] tracking-widest font-sans text-black/40 bg-black/[0.04]">
-      {children}
-    </span>
-  )
+  return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] tracking-widest text-black/40 bg-black/[0.04]">{children}</span>
 }
 
-function StatusBadge({ label, type }: { label: string; type: "available" | "beta" | "planned" }) {
-  const colors = {
-    available: "bg-emerald-50 text-emerald-700 border-emerald-200/60",
-    beta: "bg-amber-50 text-amber-700 border-amber-200/60",
-    planned: "bg-black/[0.03] text-black/40 border-black/[0.08]",
+function StatusBadge({ status }: { status: "production" | "beta" | "planned" }) {
+  const styles = {
+    production: "bg-emerald-50 text-emerald-700 border-emerald-200/60",
+    beta: "bg-amber-50 text-amber-600 border-amber-200/60",
+    planned: "bg-black/[0.04] text-black/40 border-black/[0.08]",
   }
-  const dots = {
-    available: "bg-emerald-500",
-    beta: "bg-amber-500",
-    planned: "bg-black/20",
-  }
+  const labels = { production: "Production", beta: "Beta", planned: "Planned" }
   return (
-    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] tracking-widest border ${colors[type]}`}>
-      <span className={`w-1.5 h-1.5 rounded-full ${dots[type]}`} />
-      {label}
+    <span className={`text-[10px] px-2 py-0.5 rounded-full border tracking-widest ${styles[status]}`}>
+      {labels[status]}
     </span>
   )
 }
@@ -69,182 +53,275 @@ export default function ProductPage() {
     <div className="bg-[#F5F4F0] text-[#111] min-h-screen font-sans antialiased">
       <MobileNav />
 
-      {/* ── PAGE HERO ────────────────────────────────────────────────────── */}
+      {/* Hero */}
       <section className="pt-40 pb-24 px-6 md:px-12 lg:px-20">
         <div className="max-w-6xl mx-auto">
           <Tag>PRODUCT</Tag>
           <RevealText className="mt-5 text-5xl md:text-6xl lg:text-7xl font-light tracking-tight leading-[1.02]">
-            {"The Veritas product,\nexplained."}
+            {"Veritas DPDPA\nCompliance Platform."}
           </RevealText>
           <p className="mt-8 text-base text-black/45 leading-relaxed max-w-xl">
-            Veritas is an open-source AI agent orchestration platform designed around a single principle: every decision an AI agent makes should be visible, traceable, and trustworthy.
+            An on-premise compliance monitoring platform for the Digital Personal Data Protection Act 2023. Detects violations in your application telemetry, enforces DPDPA rules, and maintains a tamper-evident audit ledger - entirely within your infrastructure.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <StatusBadge label="Open Source" type="available" />
-            <StatusBadge label="Beta" type="beta" />
-            <StatusBadge label="MIT License" type="available" />
+          <div className="mt-6 flex flex-wrap gap-3">
+            <div className="px-4 py-2 rounded-xl bg-white border border-black/[0.07] text-sm text-black/60">v1.0.16</div>
+            <div className="px-4 py-2 rounded-xl bg-white border border-black/[0.07] text-sm text-black/60">412 tests passing</div>
+            <div className="px-4 py-2 rounded-xl bg-white border border-black/[0.07] text-sm text-black/60">Ubuntu · macOS · Windows</div>
           </div>
         </div>
       </section>
 
-      {/* ── WHO IT'S FOR ──────────────────────────────────────────────────── */}
+      {/* DPDPA Rules */}
       <section className="py-24 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
         <div className="max-w-6xl mx-auto">
-          <div className="mb-12">
-            <Tag>WHO IT&apos;S FOR</Tag>
-            <RevealText className="mt-5 text-4xl md:text-5xl font-light tracking-tight leading-[1.05]">
-              {"Built for teams who need\nto trust their AI."}
-            </RevealText>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {[
-              {
-                icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>,
-                label: "COMPLIANCE & GOVERNANCE",
-                title: "Audit every AI decision",
-                desc: "Regulatory requirements demand a record of every automated decision. Veritas gives compliance teams the structured, exportable audit trail they need — without slowing down the product team.",
-                delay: 0,
-              },
-              {
-                icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>,
-                label: "ENGINEERING TEAMS",
-                title: "Debug and observe agents",
-                desc: "When an AI agent behaves unexpectedly in production, you need to know why. Veritas makes every decision traceable so you can replay executions and fix issues quickly.",
-                delay: 80,
-              },
-              {
-                icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>,
-                label: "AI RESEARCHERS",
-                title: "Evaluate agent behavior",
-                desc: "Studying how AI agents make decisions? Veritas provides structured logging and comparison tools to analyze agent behavior systematically across multiple runs.",
-                delay: 140,
-              },
-            ].map((c) => (
-              <BentoCard key={c.label} className="p-8 flex flex-col min-h-[280px]" delay={c.delay}>
-                <div className="w-10 h-10 rounded-xl border border-black/10 flex items-center justify-center mb-5">
-                  {c.icon}
-                </div>
-                <div className="font-pixel text-[10px] tracking-widest text-black/30 mb-3">{c.label}</div>
-                <h3 className="text-lg font-light mb-3">{c.title}</h3>
-                <p className="text-sm text-black/45 leading-relaxed flex-1">{c.desc}</p>
-              </BentoCard>
-            ))}
-          </div>
-        </div>
-      </section>
+          <Tag>DPDPA RULE ENGINE</Tag>
+          <RevealText className="mt-5 text-4xl md:text-5xl font-light tracking-tight leading-[1.05] mb-12">{"Four rules. Every violation caught."}</RevealText>
 
-      {/* ── CORE CAPABILITIES ─────────────────────────────────────────────── */}
-      <section className="py-24 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-12">
-            <PixelIcon type="platform" size={40} />
-            <div className="mt-4"><Tag>CORE CAPABILITIES</Tag></div>
-            <RevealText className="mt-5 text-4xl md:text-5xl font-light tracking-tight leading-[1.05]">
-              {"What Veritas does today."}
-            </RevealText>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="space-y-3">
             {[
               {
-                status: "available" as const,
-                title: "Verifiable Execution",
-                desc: "Every agent run produces a structured execution record. Inputs, tool calls, intermediate states, and final outputs are all captured in a queryable format. You can replay any run deterministically.",
-                icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>,
+                id: "EXPOSURE_001",
+                title: "Data Exposure",
+                severity: "HIGH",
+                when: "Personal data appears where it must never appear  -  application logs, debug output, API responses not intended to carry it.",
+                example: "A debug log line contains an Aadhaar number. DPDPA § 8(3) requires data minimisation  -  no more data than necessary for the purpose.",
+                statute: "DPDPA 2023 § 8(3)  -  Data minimisation",
                 delay: 0,
               },
               {
-                status: "available" as const,
-                title: "Decision Tracing",
-                desc: "Step through every decision your agent made during a run. Each decision point is logged with the context that influenced it, the options considered, and the outcome chosen.",
-                icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>,
-                delay: 80,
+                id: "PURPOSE_001",
+                title: "Purpose Limitation",
+                severity: "HIGH",
+                when: "Data appears in a system whose declared purpose or consent scope does not permit it, or a field not declared in the org config at all.",
+                example: "A phone number collected for order fulfillment appears in a marketing analytics system. The consent scope is order_fulfillment, not marketing.",
+                statute: "DPDPA 2023 § 6  -  Purpose limitation",
+                delay: 60,
               },
               {
-                status: "available" as const,
-                title: "Audit Logs",
-                desc: "Structured, permanent logs of every action, output, and state change. Logs include timestamps, agent identity, tool used, and result. Export to JSON or query via API.",
-                icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 10h8M8 14h5"/></svg>,
-                delay: 0,
+                id: "RETENTION_001",
+                title: "Retention Violation",
+                severity: "MEDIUM",
+                when: "Data in a source system is older than the retention window declared for that field in the org config.",
+                example: "Customer Aadhaar data stored in the KYC system is 200 days old, but retention_days is 180. Every day after the window is a fresh violation.",
+                statute: "DPDPA 2023 § 8(7)  -  Storage limitation",
+                delay: 120,
               },
               {
-                status: "beta" as const,
-                title: "Access Boundaries",
-                desc: "Define exactly which tools, APIs, and resources each agent is permitted to access. Attempts to call unauthorized tools are blocked and logged. Fine-grained permission model currently in beta.",
-                icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
-                delay: 80,
+                id: "LINKAGE_001",
+                title: "Data Linkage / Re-identification",
+                severity: "MEDIUM",
+                when: "Several individually harmless fields appear together in a way that could identify a specific person, as defined by the org's linkage rules.",
+                example: "name, phone, and delivery_address appear together in a single event. Each field alone is not identifying, but together they uniquely identify an individual.",
+                statute: "DPDPA 2023 § 2(t)  -  Definition of personal data",
+                delay: 180,
               },
-            ].map((cap) => (
-              <BentoCard key={cap.title} className="p-8 flex flex-col min-h-[220px]" delay={cap.delay}>
-                <div className="flex items-start justify-between mb-5">
-                  <div className="w-10 h-10 rounded-xl border border-black/10 flex items-center justify-center">
-                    {cap.icon}
+            ].map((rule) => (
+              <BentoCard key={rule.id} className="p-8 md:p-10" delay={rule.delay}>
+                <div className="flex items-start justify-between gap-6 mb-5">
+                  <div className="flex items-center gap-4">
+                    <code className="font-pixel text-[11px] text-black/35 tracking-widest">{rule.id}</code>
+                    <h3 className="text-xl font-light">{rule.title}</h3>
                   </div>
-                  <StatusBadge label={cap.status === "available" ? "Available" : "Beta"} type={cap.status} />
+                  <span className={`shrink-0 text-[10px] px-2.5 py-1 rounded-full border tracking-widest ${rule.severity === "HIGH" ? "bg-red-50 text-red-600 border-red-200/70" : "bg-amber-50 text-amber-600 border-amber-200/60"}`}>
+                    {rule.severity}
+                  </span>
                 </div>
-                <h3 className="text-lg font-light mb-3">{cap.title}</h3>
-                <p className="text-sm text-black/45 leading-relaxed flex-1">{cap.desc}</p>
-              </BentoCard>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── INPUTS / OUTPUTS ──────────────────────────────────────────────── */}
-      <section className="py-24 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-12">
-            <Tag>HOW DATA FLOWS</Tag>
-            <RevealText className="mt-5 text-4xl md:text-5xl font-light tracking-tight leading-[1.05]">
-              {"Logged at every step."}
-            </RevealText>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {[
-              { step: "01", label: "INPUT", title: "Task & context", desc: "The initial task, context documents, and configuration are logged before the agent starts. Nothing happens before it is recorded.", delay: 0 },
-              { step: "02", label: "PROCESSING", title: "Decisions & tool calls", desc: "Every intermediate decision, tool call, and state transition is captured in real time. Secrets and PII are redacted automatically.", delay: 80 },
-              { step: "03", label: "OUTPUT", title: "Result & audit record", desc: "The final result is returned alongside a complete audit record linking every output back to the decisions that produced it.", delay: 140 },
-            ].map((s) => (
-              <BentoCard key={s.step} className="p-8 min-h-[220px] flex flex-col" delay={s.delay}>
-                <div className="flex items-center justify-between mb-6">
-                  <span className="font-pixel text-[11px] text-black/20 tracking-widest">{s.step}</span>
-                  <span className="text-[10px] text-black/30 tracking-widest uppercase px-2.5 py-1 rounded-full bg-black/[0.03] border border-black/[0.06]">{s.label}</span>
-                </div>
-                <h3 className="text-lg font-light mb-3">{s.title}</h3>
-                <p className="text-sm text-black/45 leading-relaxed flex-1">{s.desc}</p>
-              </BentoCard>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── HONEST LIMITATIONS ────────────────────────────────────────────── */}
-      <section className="py-24 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-12">
-            <Tag>CURRENT LIMITATIONS</Tag>
-            <RevealText className="mt-5 text-4xl md:text-5xl font-light tracking-tight leading-[1.05]">
-              {"What we&apos;re still building."}
-            </RevealText>
-          </div>
-          <BentoCard className="p-8 md:p-10" delay={0}>
-            <p className="text-sm text-black/60 leading-relaxed mb-8 max-w-2xl">
-              Veritas is in active beta. We believe in being transparent about what the product can and cannot do today. The following capabilities are either in development or planned.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {[
-                { status: "beta" as const, label: "Access Boundaries", note: "Permission model works but is being hardened for production use." },
-                { status: "planned" as const, label: "Native integrations library", note: "Pre-built connectors for common APIs are on the roadmap." },
-                { status: "planned" as const, label: "Dashboard UI", note: "A visual audit dashboard is in design. Currently logs are via API and CLI." },
-                { status: "planned" as const, label: "Multi-agent coordination", note: "Verifying interactions between multiple agents is a planned capability." },
-                { status: "beta" as const, label: "Streaming output logging", note: "Real-time streaming log capture works but has known edge cases." },
-                { status: "planned" as const, label: "Long-term storage", note: "Audit log retention beyond local runs requires self-hosted configuration." },
-              ].map((l) => (
-                <div key={l.label} className="flex items-start gap-4">
-                  <StatusBadge label={l.status === "beta" ? "Beta" : "Planned"} type={l.status} />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <div className="text-sm font-light text-black/70 mb-1">{l.label}</div>
-                    <div className="text-xs text-black/40 leading-relaxed">{l.note}</div>
+                    <div className="text-[10px] text-black/30 tracking-widest uppercase mb-2">Fires when</div>
+                    <p className="text-sm text-black/55 leading-relaxed">{rule.when}</p>
                   </div>
+                  <div>
+                    <div className="text-[10px] text-black/30 tracking-widest uppercase mb-2">Example</div>
+                    <p className="text-sm text-black/55 leading-relaxed">{rule.example}</p>
+                  </div>
+                </div>
+                <div className="mt-5 pt-4 border-t border-black/[0.05]">
+                  <span className="font-pixel text-[9px] text-black/25 tracking-widest">{rule.statute}</span>
+                </div>
+              </BentoCard>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PII Detection Engine */}
+      <section className="py-24 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
+        <div className="max-w-6xl mx-auto">
+          <Tag>PII DETECTION</Tag>
+          <RevealText className="mt-5 text-4xl md:text-5xl font-light tracking-tight leading-[1.05] mb-12">{"Built for India's personal data."}</RevealText>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <BentoCard className="p-8" delay={0}>
+              <div className="font-pixel text-[10px] text-black/25 tracking-widest mb-5">DETECTION ENGINE</div>
+              <h3 className="text-lg font-light mb-4">Microsoft Presidio + spaCy</h3>
+              <p className="text-sm text-black/50 leading-relaxed mb-5">
+                Runs fully locally  -  no data leaves your network for detection. Presidio provides the NLP pipeline, spaCy (en_core_web_lg) handles named entity recognition. All detection happens synchronously inside your server process.
+              </p>
+              <div className="space-y-2">
+                {["Regex patterns + NLP hybrid approach", "Confidence scoring per entity", "Validators eliminate false positives", "Custom recognizers for Indian PII types"].map(f => (
+                  <div key={f} className="flex items-center gap-2 text-xs text-black/50">
+                    <div className="w-1 h-1 rounded-full bg-black/25 shrink-0" />
+                    {f}
+                  </div>
+                ))}
+              </div>
+            </BentoCard>
+
+            <BentoCard className="p-8" delay={80}>
+              <div className="font-pixel text-[10px] text-black/25 tracking-widest mb-5">INDIAN PII RECOGNIZERS</div>
+              <div className="space-y-3">
+                {[
+                  { type: "Aadhaar", detail: "Custom recognizer with Verhoeff checksum validation to eliminate false positives" },
+                  { type: "PAN Card", detail: "Pattern AAAAA9999A, validated against structural rules" },
+                  { type: "Indian Phone", detail: "10-digit numbers with Indian operator prefix patterns" },
+                  { type: "Name", detail: "spaCy PERSON entity + Indian name patterns" },
+                  { type: "Email", detail: "Standard RFC 5322 pattern" },
+                  { type: "Location", detail: "spaCy LOCATION entity (address, city)" },
+                ].map(item => (
+                  <div key={item.type} className="pb-3 border-b border-black/[0.05] last:border-0 last:pb-0">
+                    <div className="flex items-center gap-3 mb-1">
+                      <span className="font-pixel text-[10px] text-black/40 tracking-widest">{item.type.toUpperCase()}</span>
+                    </div>
+                    <p className="text-xs text-black/40 leading-relaxed">{item.detail}</p>
+                  </div>
+                ))}
+              </div>
+            </BentoCard>
+          </div>
+        </div>
+      </section>
+
+      {/* Evidence chain & dashboard */}
+      <section className="py-24 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
+        <div className="max-w-6xl mx-auto">
+          <Tag>EVIDENCE & DASHBOARD</Tag>
+          <RevealText className="mt-5 text-4xl md:text-5xl font-light tracking-tight leading-[1.05] mb-12">{"Auditor-grade evidence.\nLive investigation."}</RevealText>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <BentoCard className="p-8" delay={0}>
+              <div className="font-pixel text-[10px] text-black/25 tracking-widest mb-5">TAMPER-EVIDENT EVIDENCE CHAIN</div>
+              <h3 className="text-lg font-light mb-4">SHA-256 hash chain per organisation</h3>
+              <p className="text-sm text-black/50 leading-relaxed mb-5">
+                Every verdict is linked to the previous one by storing <code className="bg-black/[0.05] px-1 rounded font-mono text-[11px]">sha256(prev_hash + verdict)</code>. If any record is altered, the chain breaks. The dashboard can verify the entire chain at any time.
+              </p>
+              <div className="space-y-2">
+                {["Append-only SQLite evidence store", "Per-organisation isolation", "Full chain verification via dashboard", "Export tamper-evident PDF audit reports", "Chain verification on demand"].map(f => (
+                  <div key={f} className="flex items-center gap-2 text-xs text-black/50">
+                    <span className="text-emerald-600">✓</span> {f}
+                  </div>
+                ))}
+              </div>
+            </BentoCard>
+
+            <BentoCard className="p-8" delay={80}>
+              <div className="font-pixel text-[10px] text-black/25 tracking-widest mb-5">INVESTIGATION DASHBOARD</div>
+              <h3 className="text-lg font-light mb-4">7 purpose-built views</h3>
+              <div className="space-y-3">
+                {[
+                  { view: "Live Stream", desc: "Violations pushed via WebSocket the moment they're detected" },
+                  { view: "Audit Ledger", desc: "Full chronological record of all verdicts for this org" },
+                  { view: "Case View", desc: "Per-violation investigation panel with optional AI Q&A" },
+                  { view: "Agents", desc: "Register, monitor heartbeat, revoke any agent instantly" },
+                  { view: "Policy", desc: "View the current org config and its version history" },
+                  { view: "Audit Log", desc: "Every admin action logged  -  who did what and when" },
+                  { view: "Scan Sandbox", desc: "Test PII detection against a sample payload before deploying" },
+                ].map(item => (
+                  <div key={item.view} className="flex items-start gap-3">
+                    <span className="font-pixel text-[9px] text-black/30 tracking-widest w-24 shrink-0">{item.view.toUpperCase()}</span>
+                    <span className="text-xs text-black/50 leading-relaxed">{item.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </BentoCard>
+          </div>
+        </div>
+      </section>
+
+      {/* Licensing */}
+      <section className="py-24 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
+        <div className="max-w-6xl mx-auto">
+          <Tag>LICENSING</Tag>
+          <RevealText className="mt-5 text-4xl md:text-5xl font-light tracking-tight leading-[1.05] mb-12">{"Machine-bound.\nOffline-first."}</RevealText>
+
+          <BentoCard className="p-8 md:p-10" delay={0}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div>
+                <h3 className="text-lg font-light mb-4">How Veritas licensing works</h3>
+                <p className="text-sm text-black/50 leading-relaxed mb-5">
+                  Veritas uses RSA-PSS signed license files (<code className="bg-black/[0.05] px-1 rounded font-mono text-[10px]">.vlic</code>). The license encodes your organisation name, tier, issue date, expiry date, and optionally a machine fingerprint. The product embeds only the public key  -  your private key never leaves our servers.
+                </p>
+                <div className="space-y-3 text-sm text-black/55">
+                  {[
+                    "No call home  -  license is verified locally on every startup",
+                    "Machine-bound option: fingerprint ties the license to your specific server",
+                    "Linux fingerprint: hash of /etc/machine-id (stable across renames and network changes)",
+                    "Expiry enforced locally  -  renew by installing a new .vlic file",
+                    "Invalid or expired license: clear error message, service exits cleanly",
+                  ].map(item => (
+                    <div key={item} className="flex items-start gap-2.5">
+                      <span className="text-black/30 shrink-0 mt-0.5">·</span>
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h3 className="text-lg font-light mb-4">License workflow</h3>
+                <div className="space-y-4">
+                  {[
+                    { n: "1", step: "Install Veritas on your server" },
+                    { n: "2", step: "Run: sudo veritas fingerprint (prints a 64-char hash)" },
+                    { n: "3", step: "Send that hash to your Veritas contact" },
+                    { n: "4", step: "Receive a signed veritas.vlic file" },
+                    { n: "5", step: "Run: sudo veritas license /path/to/veritas.vlic" },
+                    { n: "6", step: "Service starts. Dashboard is available." },
+                  ].map(item => (
+                    <div key={item.n} className="flex items-start gap-4">
+                      <span className="font-pixel text-[10px] text-black/25 tracking-widest shrink-0 w-4">{item.n}</span>
+                      <span className="text-sm text-black/55">{item.step}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-6">
+                  <Link href="/book-demo" className="inline-flex items-center gap-2 text-sm text-black/50 hover:text-black tracking-widest transition-colors">
+                    Request a license → /book-demo
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </BentoCard>
+        </div>
+      </section>
+
+      {/* Feature status */}
+      <section className="py-24 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
+        <div className="max-w-6xl mx-auto">
+          <Tag>FEATURE STATUS</Tag>
+          <h2 className="mt-5 text-3xl font-light tracking-tight mb-10">What&apos;s built. What&apos;s next.</h2>
+          <BentoCard className="p-8" delay={0}>
+            <div className="space-y-3">
+              {[
+                { feature: "PII detection (Presidio + spaCy + Indian recognizers)", status: "production" as const },
+                { feature: "DPDPA rule engine (EXPOSURE, PURPOSE, RETENTION, LINKAGE)", status: "production" as const },
+                { feature: "SHA-256 tamper-evident evidence chain", status: "production" as const },
+                { feature: "Investigation dashboard (7 views)", status: "production" as const },
+                { feature: "Agent registration, heartbeat, revoke", status: "production" as const },
+                { feature: "RSA-PSS machine-bound licensing", status: "production" as const },
+                { feature: "Multi-organisation support", status: "production" as const },
+                { feature: "RBAC (4 roles)", status: "production" as const },
+                { feature: "Linux .deb, macOS .pkg, Windows installer", status: "production" as const },
+                { feature: "Kubernetes DaemonSet agent deployment", status: "production" as const },
+                { feature: "Optional LLM investigation (OpenAI / Anthropic / Ollama)", status: "production" as const },
+                { feature: "PDF audit report export", status: "production" as const },
+                { feature: "412 automated tests (Ubuntu, macOS, Windows CI)", status: "production" as const },
+                { feature: "Ingest queue and worker pool (for high-throughput deployments)", status: "planned" as const },
+                { feature: "License portal hardening (fingerprint validation, row-level security)", status: "planned" as const },
+                { feature: "macOS and Windows machine-id fingerprint parity", status: "planned" as const },
+              ].map((item, i) => (
+                <div key={i} className="flex items-center justify-between py-2.5 border-b border-black/[0.05] last:border-0">
+                  <span className="text-sm text-black/60 leading-relaxed">{item.feature}</span>
+                  <StatusBadge status={item.status} />
                 </div>
               ))}
             </div>
@@ -252,25 +329,12 @@ export default function ProductPage() {
         </div>
       </section>
 
-      {/* ── CTA ───────────────────────────────────────────────────────────── */}
-      <section className="py-24 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-light tracking-tight leading-[1.05]">
-              Ready to go deeper?
-            </h2>
-            <p className="mt-3 text-sm text-black/45 max-w-sm">
-              See the full workflow, read the technical docs, or book a demo to see Veritas in action.
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-3 shrink-0">
-            <Link href="/how-it-works" className="px-8 py-3.5 bg-[#111] text-white text-sm rounded-xl hover:bg-[#333] transition-colors tracking-widest font-medium text-center">
-              SEE HOW IT WORKS
-            </Link>
-            <Link href="/documentation" className="px-8 py-3.5 border border-black/10 text-black/60 text-sm rounded-xl hover:border-black/25 hover:text-black hover:bg-black/[0.03] transition-all tracking-widest text-center">
-              READ THE DOCS
-            </Link>
-          </div>
+      {/* CTAs */}
+      <section className="py-20 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row gap-3">
+          <Link href="/book-demo" className="flex-1 px-8 py-4 bg-[#111] text-white text-sm rounded-xl hover:bg-[#333] transition-colors tracking-widest font-medium text-center">BOOK A DEMO</Link>
+          <Link href="/how-it-works" className="flex-1 px-8 py-4 border border-black/10 text-black/60 text-sm rounded-xl hover:border-black/25 hover:text-black transition-all tracking-widest text-center">HOW IT WORKS</Link>
+          <Link href="/documentation" className="flex-1 px-8 py-4 border border-black/10 text-black/60 text-sm rounded-xl hover:border-black/25 hover:text-black transition-all tracking-widest text-center">INSTALLATION GUIDE</Link>
         </div>
       </section>
 

@@ -45,7 +45,7 @@ export default function UserGuidePage() {
             {"Core concepts."}
           </RevealText>
           <p className="mt-6 text-base text-black/45 leading-relaxed max-w-xl">
-            A deep dive into how Veritas works — agents, tools, audit logs, access boundaries, and verification rules.
+            A deep dive into how Veritas works  -  agents, tools, audit logs, access boundaries, and verification rules.
           </p>
           <div className="mt-6 p-4 rounded-xl border border-amber-200/60 bg-amber-50">
             <p className="text-xs text-amber-700">This guide is being written alongside the beta. Some sections are more complete than others. Last updated: October 2024.</p>
@@ -63,10 +63,10 @@ export default function UserGuidePage() {
             content: `An Agent in Veritas is the central orchestration unit. It receives a task, uses tools to accomplish sub-goals, makes decisions, and produces an output.
 
 Every agent has:
-• A name — used in logs and audit records
-• A model — the underlying LLM (e.g., gpt-4o, claude-3-5-sonnet)
-• Tools — the functions the agent is permitted to call
-• A verify flag — whether outputs should be validated before the run completes
+• A name  -  used in logs and audit records
+• A model  -  the underlying LLM (e.g., gpt-4o, claude-3-5-sonnet)
+• Tools  -  the functions the agent is permitted to call
+• A verify flag  -  whether outputs should be validated before the run completes
 • An optional AuditLogger instance
 
 Agents are designed to be stateless between runs. All state is captured in the audit record.`,
@@ -74,7 +74,7 @@ Agents are designed to be stateless between runs. All state is captured in the a
           {
             id: "tools",
             title: "Tools",
-            content: `Tools are the functions your agent calls to interact with the outside world — fetching data, reading files, calling APIs, and so on.
+            content: `Tools are the functions your agent calls to interact with the outside world  -  fetching data, reading files, calling APIs, and so on.
 
 In Veritas, every tool call is automatically logged with:
 • Tool name
@@ -132,7 +132,7 @@ You can define verification rules in veritas.config.json:
   }
 }
 
-If verification fails, the run status is set to "verified_failed" and the failure details are included in the audit record. The output is still returned — Veritas does not block the result, it annotates it.`,
+If verification fails, the run status is set to "verified_failed" and the failure details are included in the audit record. The output is still returned  -  Veritas does not block the result, it annotates it.`,
           },
         ].map((concept, i) => (
           <BentoCard key={concept.id} className="p-8 md:p-10" delay={i * 40}>

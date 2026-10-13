@@ -4,44 +4,32 @@ import React, { useRef, useEffect, useState } from "react"
 import { MobileNav } from "@/components/mobile-nav"
 import { VeritasFooter } from "@/components/veritas-footer"
 import { RevealText } from "@/components/reveal-text"
+import { PixelIcon } from "@/components/pixel-icon"
 import Link from "next/link"
 
-function useInView(threshold = 0.15) {
+function useInView(threshold = 0.1) {
   const ref = useRef<HTMLDivElement>(null)
   const [inView, setInView] = useState(false)
   useEffect(() => {
-    const el = ref.current
-    if (!el) return
+    const el = ref.current; if (!el) return
     const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true) }, { threshold })
-    obs.observe(el)
-    return () => obs.disconnect()
+    obs.observe(el); return () => obs.disconnect()
   }, [threshold])
   return { ref, inView }
 }
 
 function BentoCard({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
-  const { ref, inView } = useInView(0.1)
+  const { ref, inView } = useInView()
   return (
-    <div
-      ref={ref}
-      className={`group relative rounded-2xl border border-black/[0.07] bg-white overflow-hidden hover:border-black/[0.15] hover:bg-[#fafaf8] ${className}`}
-      style={{
-        opacity: inView ? 1 : 0,
-        transform: inView ? "translateY(0)" : "translateY(28px)",
-        transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms, border-color 0.3s ease, background-color 0.3s ease`,
-      }}
-    >
+    <div ref={ref} className={`rounded-2xl border border-black/[0.07] bg-white overflow-hidden hover:border-black/[0.14] hover:bg-[#fafaf8] transition-colors ${className}`}
+      style={{ opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(24px)", transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms, border-color 0.3s` }}>
       {children}
     </div>
   )
 }
 
 function Tag({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] tracking-widest font-sans text-black/40 bg-black/[0.04]">
-      {children}
-    </span>
-  )
+  return <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] tracking-widest text-black/40 bg-black/[0.04]">{children}</span>
 }
 
 export default function AboutPage() {
@@ -49,157 +37,195 @@ export default function AboutPage() {
     <div className="bg-[#F5F4F0] text-[#111] min-h-screen font-sans antialiased">
       <MobileNav />
 
-      {/* ── PAGE HERO ────────────────────────────────────────────────────── */}
+      {/* Hero */}
       <section className="pt-40 pb-24 px-6 md:px-12 lg:px-20">
         <div className="max-w-6xl mx-auto">
           <Tag>ABOUT</Tag>
           <RevealText className="mt-5 text-5xl md:text-6xl lg:text-7xl font-light tracking-tight leading-[1.02]">
-            {"Built to make\nAI trustworthy."}
+            {"Compliance,\nwithout compromise."}
           </RevealText>
           <p className="mt-8 text-base text-black/45 leading-relaxed max-w-xl">
-            Veritas is an open-source project created to solve a real problem: AI agents are becoming more capable, but the tools to understand and trust them haven&apos;t kept up.
+            Veritas began with India&apos;s Digital Personal Data Protection Act 2023 - a real, urgent compliance challenge with no good on-premise tooling to solve it. The platform is built to be equally relevant for any organisation subject to modern personal data protection law.
           </p>
         </div>
       </section>
 
-      {/* ── MISSION ───────────────────────────────────────────────────────── */}
-      <section className="py-24 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
+      {/* Mission */}
+      <section className="py-8 pb-24 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
         <div className="max-w-6xl mx-auto">
-          <BentoCard className="p-10 md:p-14" delay={0}>
-            <p className="text-2xl md:text-3xl font-light leading-relaxed text-black/70 max-w-3xl">
-              &ldquo;AI is becoming more capable every day. But capability without transparency creates systems that are hard to trust, difficult to debug, and impossible to govern. Veritas exists to change that.&rdquo;
+          <BentoCard className="p-10 md:p-14 overflow-hidden relative" delay={0}>
+            {/* Iridescent image accent */}
+            <div className="hidden md:block absolute inset-y-0 right-0 w-2/5 pointer-events-none opacity-60">
+              <img
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/analyst-Ysxnqg7Fpy2cfA56PiIttv1KximMhT.png"
+                alt=""
+                className="w-full h-full object-cover object-center"
+              />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to right, white 0%, transparent 60%)" }} />
+            </div>
+            <p className="relative z-10 text-2xl md:text-3xl font-light leading-relaxed text-black/70 max-w-2xl">
+              &ldquo;Every organisation processing personal data is now legally required to detect violations, maintain auditable records, and prove compliance. Doing this manually across hundreds of microservices is impossible. Veritas automates it - on your own infrastructure, with your data never leaving your network.&rdquo;
             </p>
           </BentoCard>
         </div>
       </section>
 
-      {/* ── THE PROBLEM ───────────────────────────────────────────────────── */}
+      {/* The problem we solve */}
       <section className="py-24 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <Tag>THE PROBLEM</Tag>
-              <RevealText className="mt-5 text-4xl md:text-5xl font-light tracking-tight leading-[1.05]">
-                {"AI agents make decisions\nin the dark."}
-              </RevealText>
-              <div className="mt-8 space-y-5">
-                {[
-                  "When an AI agent fails, it is often impossible to know why. The decision that led to the failure happened inside a black box.",
-                  "Compliance teams cannot audit what they cannot see. Regulatory requirements around automated decision-making are increasing, but most AI tools provide no audit trail.",
-                  "Debugging production AI agents is painful. Without execution traces, you cannot reproduce failures or confidently fix them.",
-                  "Trust in AI systems requires evidence, not assurances. Saying a system is trustworthy is not enough — you need to show the work.",
-                ].map((text, i) => (
-                  <div key={i} className="flex items-start gap-4">
-                    <div className="w-1 bg-black/10 rounded-full shrink-0 self-stretch" />
-                    <p className="text-sm text-black/50 leading-relaxed">{text}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <BentoCard className="p-8" delay={0}>
-              <div className="text-xs text-black/30 tracking-widest uppercase mb-5">Without Veritas</div>
-              <div className="space-y-3">
-                {[
-                  { icon: "✗", text: "Agent failed. No trace available." },
-                  { icon: "✗", text: "Cannot reproduce the error." },
-                  { icon: "✗", text: "No record of what data was accessed." },
-                  { icon: "✗", text: "Audit review: insufficient documentation." },
-                  { icon: "✗", text: "Cannot explain the decision to stakeholders." },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-red-50/50 border border-red-100/60">
-                    <span className="text-red-400 text-sm shrink-0">{item.icon}</span>
-                    <span className="text-xs text-black/50">{item.text}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4 pt-4 border-t border-black/[0.06] text-xs text-black/30">With Veritas, each of these has a clear answer.</div>
-            </BentoCard>
-          </div>
-        </div>
-      </section>
+          <Tag>THE PROBLEM WE SOLVE</Tag>
+          <RevealText className="mt-5 text-4xl md:text-5xl font-light tracking-tight leading-[1.05] mb-12">
+            {"Modern data protection law\nis not optional."}
+          </RevealText>
 
-      {/* ── DESIGN PRINCIPLES ────────────────────────────────────────────── */}
-      <section className="py-24 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-12">
-            <Tag>DESIGN PRINCIPLES</Tag>
-            <RevealText className="mt-5 text-4xl md:text-5xl font-light tracking-tight leading-[1.05]">
-              {"How we think\nabout the product."}
-            </RevealText>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {[
               {
-                num: "01",
-                title: "Transparency First",
-                desc: "Every design decision starts with the question: does this make the system more transparent? Logging is not optional. Observability is not an add-on.",
+                icon: "platform" as const,
+                title: "The law requires detection",
+                desc: "Data protection regulation mandates that data fiduciaries implement technical and organisational measures to prevent breaches and violations. Not knowing is not a defence.",
                 delay: 0,
               },
               {
-                num: "02",
-                title: "Honest About Limitations",
-                desc: "We clearly distinguish what Veritas can do today from what is in development. We do not make claims we cannot support. This page itself follows that principle.",
+                icon: "workflow" as const,
+                title: "Manual review does not scale",
+                desc: "A mid-sized company with 10 services generates millions of log lines per day. No compliance team can manually review logs for personal data, purpose violations, and retention breaches in real time.",
                 delay: 80,
               },
               {
-                num: "03",
-                title: "Developer Experience Matters",
-                desc: "A transparency tool no one uses helps no one. Veritas is designed to be easy to integrate, easy to read, and easy to trust — so teams actually use it.",
-                delay: 140,
+                icon: "integrations" as const,
+                title: "Generic tools need months of setup",
+                desc: "SIEM tools and DLP products are not built for jurisdiction-specific rules like DPDPA purpose limitation, retention windows, or re-identification linkage detection. They require extensive custom configuration.",
+                delay: 0,
               },
-            ].map((p) => (
-              <BentoCard key={p.num} className="p-8 flex flex-col min-h-[260px]" delay={p.delay}>
-                <span className="font-pixel text-[11px] text-black/20 tracking-widest block mb-6">{p.num}</span>
-                <h3 className="text-lg font-light mb-3">{p.title}</h3>
-                <p className="text-sm text-black/45 leading-relaxed flex-1">{p.desc}</p>
+              {
+                icon: "pricing" as const,
+                title: "Regulators require tamper-evident proof",
+                desc: "When a regulator asks how you know your data was handled correctly, you need more than a spreadsheet. You need a cryptographically verifiable audit record that proves no evidence was altered.",
+                delay: 80,
+              },
+            ].map((item) => (
+              <BentoCard key={item.title} className="p-8" delay={item.delay}>
+                <div className="mb-4"><PixelIcon type={item.icon} size={32} /></div>
+                <h3 className="text-lg font-light mb-4">{item.title}</h3>
+                <p className="text-sm text-black/50 leading-relaxed">{item.desc}</p>
               </BentoCard>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── PROJECT STATUS ────────────────────────────────────────────────── */}
+      {/* Design principles */}
       <section className="py-24 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
         <div className="max-w-6xl mx-auto">
-          <div className="mb-12">
-            <Tag>PROJECT STATUS</Tag>
-            <RevealText className="mt-5 text-4xl md:text-5xl font-light tracking-tight leading-[1.05]">
-              {"Where we are today."}
-            </RevealText>
+          <Tag>DESIGN PRINCIPLES</Tag>
+          <RevealText className="mt-5 text-4xl md:text-5xl font-light tracking-tight leading-[1.05] mb-12">{"How we built it."}</RevealText>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {[
+              {
+                n: "01",
+                icon: "agents" as const,
+                title: "Everything stays inside your network",
+                desc: "The Veritas Agent makes outbound calls only to the Veritas Server - within your infrastructure. The server has no outbound calls except the optional AI investigation, which sends no raw PII. Your compliance data is yours.",
+                delay: 0,
+              },
+              {
+                n: "02",
+                icon: "workflow" as const,
+                title: "No customer logic in code",
+                desc: "Each organisation uploads a YAML config describing their data policy. The same server binary handles every customer. Config changes are versioned, so policy changes are themselves auditable.",
+                delay: 80,
+              },
+              {
+                n: "03",
+                icon: "pricing" as const,
+                title: "Tamper-evident by design",
+                desc: "Every verdict links to the previous one via SHA-256 hash. This is not just logging - it is a cryptographic chain. If any record is altered, the chain breaks. Auditors can verify this themselves.",
+                delay: 160,
+              },
+              {
+                n: "04",
+                icon: "platform" as const,
+                title: "Honest about limitations",
+                desc: "Veritas uses one server process and SQLite. It is suitable for pilots and mid-sized deployments. We document exactly where the limits are, and what needs to be added for horizontal scale.",
+                delay: 0,
+              },
+              {
+                n: "05",
+                icon: "integrations" as const,
+                title: "Built for real data structures",
+                desc: "Aadhaar validation with Verhoeff checksum. PAN card structural rules. DPDPA section references in every verdict. Purpose limitation and linkage detection. Built for the actual requirements - not adapted from a generic tool.",
+                delay: 80,
+              },
+              {
+                n: "06",
+                icon: "agents" as const,
+                title: "Runs on what you already have",
+                desc: "A spare VM or a Windows Server box. Veritas does not require cloud infrastructure or expensive hardware. The .deb, .pkg, and .exe installers get you running in under an hour.",
+                delay: 160,
+              },
+            ].map((item) => (
+              <BentoCard key={item.n} className="p-7" delay={item.delay}>
+                <div className="mb-4"><PixelIcon type={item.icon} size={32} /></div>
+                <div className="font-pixel text-[10px] text-black/20 tracking-widest mb-3">{item.n}</div>
+                <h3 className="text-base font-light mb-3 leading-snug">{item.title}</h3>
+                <p className="text-sm text-black/45 leading-relaxed">{item.desc}</p>
+              </BentoCard>
+            ))}
           </div>
+        </div>
+      </section>
+
+      {/* Technical status */}
+      <section className="py-24 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
+        <div className="max-w-6xl mx-auto">
+          <Tag>PROJECT STATUS</Tag>
+          <RevealText className="mt-5 text-4xl md:text-5xl font-light tracking-tight leading-[1.05] mb-10">{"v1.0.16. Production-quality.\nHonest about what&apos;s next."}</RevealText>
+
           <BentoCard className="p-8 md:p-10" delay={0}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
               <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="w-2 h-2 rounded-full bg-amber-500" />
-                  <span className="text-xs text-black/40 tracking-widest uppercase">Current: Beta</span>
+                <div className="font-pixel text-[10px] text-emerald-600 tracking-widest mb-5">BUILT AND VERIFIED</div>
+                <div className="space-y-2">
+                  {[
+                    "PII detection with custom recognizers",
+                    "4 compliance rules (Exposure, Purpose, Retention, Linkage)",
+                    "SHA-256 hash-chained evidence store",
+                    "7-view investigation dashboard with WebSocket live feed",
+                    "Agent registration, token auth, heartbeat, revoke",
+                    "RSA-PSS machine-bound licensing (Linux v2 fingerprint)",
+                    "RBAC (4 roles, server-enforced, tested)",
+                    "Multi-organisation support",
+                    "Linux .deb, macOS .pkg, Windows installer",
+                    "Kubernetes DaemonSet agent",
+                    "412 automated tests across Ubuntu, macOS, Windows CI",
+                  ].map(f => (
+                    <div key={f} className="flex items-center gap-2.5 text-sm text-black/55">
+                      <span className="text-emerald-600 shrink-0">+</span> {f}
+                    </div>
+                  ))}
                 </div>
-                <p className="text-sm text-black/55 leading-relaxed mb-4">
-                  Veritas is an open-source project in active development. The core capabilities — verifiable execution, decision tracing, and audit logs — are functional and being tested in real workflows.
-                </p>
-                <p className="text-sm text-black/45 leading-relaxed">
-                  Some features are still being built. We mark everything clearly as Available, Beta, or Planned on our product page.
-                </p>
               </div>
-              <div className="space-y-4">
-                <div className="p-4 rounded-xl bg-black/[0.02] border border-black/[0.06]">
-                  <div className="text-xs text-black/30 tracking-widest uppercase mb-2">License</div>
-                  <div className="text-sm text-black/60">MIT — free to use, modify, and distribute.</div>
+              <div>
+                <div className="font-pixel text-[10px] text-amber-600 tracking-widest mb-5">IN PROGRESS / PLANNED</div>
+                <div className="space-y-2">
+                  {[
+                    "Ingest queue and worker pool for high-throughput deployments",
+                    "License portal hardening (fingerprint validation, row-level security)",
+                    "macOS and Windows machine-id fingerprint parity with Linux v2",
+                    "Offline hardening (bundle fonts and PDF library locally)",
+                    "Simulated enterprise demo environment",
+                  ].map(f => (
+                    <div key={f} className="flex items-center gap-2.5 text-sm text-black/55">
+                      <span className="text-amber-500 shrink-0">·</span> {f}
+                    </div>
+                  ))}
                 </div>
-                <div className="p-4 rounded-xl bg-black/[0.02] border border-black/[0.06]">
-                  <div className="text-xs text-black/30 tracking-widest uppercase mb-2">Source</div>
-                  <a
-                    href="https://github.com/shreyaaassss/Veritas"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-black/60 hover:text-black transition-colors"
-                  >
-                    github.com/shreyaaassss/Veritas ↗
-                  </a>
-                </div>
-                <div className="p-4 rounded-xl bg-black/[0.02] border border-black/[0.06]">
-                  <div className="text-xs text-black/30 tracking-widest uppercase mb-2">Deployment</div>
-                  <div className="text-sm text-black/60">Self-hosted. No cloud dependency required.</div>
+                <div className="mt-8 p-5 rounded-xl border border-black/[0.07] bg-black/[0.02]">
+                  <p className="text-xs text-black/45 leading-relaxed">
+                    <span className="font-medium text-black/60">Known limitation:</span> Veritas uses a single server process and SQLite. It is well-suited for pilots and mid-sized deployments. For horizontal scale, the planned ingest queue and worker pool should be in place first.
+                  </p>
                 </div>
               </div>
             </div>
@@ -207,40 +233,11 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── CONTRIBUTORS ──────────────────────────────────────────────────── */}
-      <section className="py-24 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-12">
-            <Tag>CONTRIBUTORS</Tag>
-            <RevealText className="mt-5 text-4xl md:text-5xl font-light tracking-tight leading-[1.05]">
-              {"Built in the open."}
-            </RevealText>
-          </div>
-          <BentoCard className="p-8 md:p-10" delay={0}>
-            <div className="flex flex-col md:flex-row md:items-center gap-8">
-              <div className="flex-1">
-                <p className="text-sm text-black/55 leading-relaxed mb-4">
-                  Veritas is built by contributors who care about trustworthy AI tooling. The project is open source and welcomes contributions of all kinds — code, documentation, issue reports, and design feedback.
-                </p>
-                <p className="text-sm text-black/45 leading-relaxed">
-                  If you&apos;re working on AI agent transparency, auditability, or observability, we&apos;d love to hear from you.
-                </p>
-              </div>
-              <div className="flex flex-col gap-3 shrink-0">
-                <a
-                  href="https://github.com/shreyaaassss/Veritas"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-8 py-3.5 bg-[#111] text-white text-sm rounded-xl hover:bg-[#333] transition-colors tracking-widest font-medium text-center"
-                >
-                  VIEW ON GITHUB
-                </a>
-                <Link href="/contact" className="px-8 py-3.5 border border-black/10 text-black/60 text-sm rounded-xl hover:border-black/25 hover:text-black hover:bg-black/[0.03] transition-all tracking-widest text-center">
-                  GET IN TOUCH
-                </Link>
-              </div>
-            </div>
-          </BentoCard>
+      {/* CTAs */}
+      <section className="py-20 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row gap-3">
+          <Link href="/book-demo" className="flex-1 px-8 py-4 bg-[#111] text-white text-sm rounded-xl hover:bg-[#333] transition-colors tracking-widest font-medium text-center">BOOK A DEMO</Link>
+          <Link href="/contact" className="flex-1 px-8 py-4 border border-black/10 text-black/60 text-sm rounded-xl hover:border-black/25 hover:text-black transition-all tracking-widest text-center">CONTACT US</Link>
         </div>
       </section>
 

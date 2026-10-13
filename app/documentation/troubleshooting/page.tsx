@@ -188,7 +188,7 @@ export default function TroubleshootingPage() {
             <div className="space-y-5">
               {[
                 { tip: "Enable verbose logging", detail: 'Set "logLevel": "verbose" in veritas.config.json to capture additional context in every event, including the full model prompt and response.' },
-                { tip: "Inspect the raw log file", detail: "The JSON audit log contains every event in the run. Opening it directly in any JSON viewer gives you the full picture — more than the CLI summary." },
+                { tip: "Inspect the raw log file", detail: "The JSON audit log contains every event in the run. Opening it directly in any JSON viewer gives you the full picture  -  more than the CLI summary." },
                 { tip: "Use the sandbox for debugging", detail: "Run with `veritas run --sandbox` to execute in an isolated environment that does not write to your real log directory. Useful for testing without polluting your audit history." },
                 { tip: "Check the run exit code", detail: "Veritas exits with code 0 for success, 1 for verification failure, and 2 for runtime errors. Use this in scripts to handle each case separately." },
               ].map((item, i) => (

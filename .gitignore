@@ -39,3 +39,8 @@ Thumbs.db
 # Type checking cache
 *.tsbuildinfo
 next-env.d.ts
+
+# OpenNext & Wrangler
+.open-next/
+.wrangler/
+.dev.vars
